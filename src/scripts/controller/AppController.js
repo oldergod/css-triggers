@@ -51,8 +51,16 @@ export default class AppController {
     this.detailsBreakdown =
         this.details.querySelector('.js-details-breakdown');
 
+    this.properties = Array.from(document.querySelectorAll('.js-property'));
+    this.filterForm = document.querySelector('.js-filter-form');
+    this.filterInput = document.querySelector('.js-filter-input');
+    this.noResultsMessage = document.querySelector('.js-no-results-message');
+    this.filterText = document.querySelector('.js-filter-text');
+
     this.showDetails = this.showDetails.bind(this);
     this.hideDetails = this.hideDetails.bind(this);
+    this.filterOnChange = this.filterOnChange.bind(this);
+    this.filterOnSubmit = this.filterOnSubmit.bind(this);
     this.scrollTop = 0;
 
     this.addEventListeners();
@@ -361,6 +369,43 @@ export default class AppController {
     });
   }
 
+  // TODO(benoit) how about we open the property found if only one?
+  // if so, should we reset the filter and open it? or leave the filter as is?
+  filterOnSubmit (evt) {
+    evt.preventDefault();
+    this.filterInput.blur();
+  }
+
+  filterOnChange (evt) {
+    let visibleCount = 0;
+    let filterValue = this.filterInput.value.replace(/[^a-z\-]*/ig, '');
+    let property;
+
+    if (evt.type === 'reset') {
+      filterValue = '';
+      this.properties.forEach((property) => {
+        property.classList.remove('app-main__property--hidden');
+      });
+    } else {
+      this.properties.forEach((property) => {
+        if (property.dataset['property'].includes(filterValue)) {
+          // TODO(benoit) to animate or not to animate?
+          property.classList.remove('app-main__property--hidden');
+          visibleCount++;
+        } else {
+          property.classList.add('app-main__property--hidden');
+        }
+      });
+    }
+
+    if (visibleCount === 0) {
+      this.noResultsMessage.classList.add('app-main__no-results-message--visible');
+      this.filterText.textContent = filterValue;
+    } else {
+      this.noResultsMessage.classList.remove('app-main__no-results-message--visible');
+    }
+  }
+
   addEventListeners () {
 
     const header = document.querySelector('.app-header');
@@ -409,5 +454,9 @@ export default class AppController {
 
       this.detailsCloseButton.focus();
     });
+
+    this.filterForm.addEventListener('input', this.filterOnChange);
+    this.filterForm.addEventListener('reset', this.filterOnChange);
+    this.filterForm.addEventListener('submit', this.filterOnSubmit);
   }
 }

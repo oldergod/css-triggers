@@ -71,6 +71,14 @@ Paul & Surma
   <section class="app-container">
     <main class="app-main">
 
+      <div class="app-main__filter-container" aria-hidden="true">
+        <form class="filter-form js-filter-form">
+          <label class="filter-label" for="filter">Filter:</label>
+          <input autocorrect="off" autocapitalize="off" id="filter" class="js-filter-input" name="filter" type="text" autofocus="true">
+          <button type="reset" class="reset"></button>
+        </form>
+      </div>
+
       <div class="app-main__engines" aria-hidden="true">
 
         <div class="js-legend app-main__engine-legend-container">
@@ -131,6 +139,10 @@ Paul & Surma
           </a>
         </div>
       {{/each}}
+      </div>
+
+      <div class="app-main__no-results-message js-no-results-message">
+        There are no properties containing "<span class='app-main__no-results-message__filter-text js-filter-text'></span>"
       </div>
 
       <div class="credits">

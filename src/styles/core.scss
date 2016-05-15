@@ -778,6 +778,31 @@ body {
   }
 }
 
+// TODO(benoit) tmp fix to make it clikable
+.app-main__filter-container {
+  margin-top: 50px;
+}
+
+.app-main__property--hidden {
+  display: none;
+}
+
+.app-main__no-results-message {
+  display: none;
+  text-align: center;
+  padding-top: 40px;
+  color: #696969;
+}
+
+.app-main__no-results-message--visible {
+  display: block;
+}
+
+.app-main__no-results-message__filter-text {
+  font-weight: bold;
+  color: #444;
+}
+
 @font-face {
   font-family: 'RobotoMono';
   font-style: normal;
