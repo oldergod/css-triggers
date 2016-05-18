@@ -834,6 +834,7 @@ body {
   height: 20px;
   font-family: 'Roboto', Helvetica, sans-serif;
   font-weight: 500;
+  font-size: 15px;
 }
 
 .filter-form__filter-icon-black {
@@ -846,6 +847,27 @@ body {
   outline: 0;
   width: 24px;
   height: 24px;
+}
+
+.filter-form__reset-wrapper {
+  right: 7px;
+  position: absolute;
+  top: 7px;
+  width: 22px;
+  height: 22px;
+  background: #607d8b;
+  border-radius: 50%;
+}
+
+.filter-form__reset-icon-white {
+  background: url('/third_party/MaterialIcons/ic_close_white_18px.svg') center center no-repeat;
+  text-indent: -30000px;
+  border: none;
+  width: 18px;
+  height: 18px;
+  top: 2px;
+  left: 2px;
+  position: absolute;
 }
 
 @font-face {
