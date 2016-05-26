@@ -48,15 +48,15 @@ Paul & Surma
 <body>
   <!-- @VERSION@ -->
   <header class="js-header app-header">
-    <h1 class="app-header__title" style="opacity: 0;">CSS Triggers</h1>
+    <h1 class="app-header__title" style="display: none;">CSS Triggers</h1>
 
-    <div class="app-header__filter-wrapper">
+    <div class="app-header__filter-wrapper js-filter-wrapper">
       <div class="app-header__filter-form-wrapper">
         <form class="filter-form js-filter-form" autocomplete="off">
           <div class="filter-form__filter-box">
             <input placeholder="filter" autocorrect="off" autocapitalize="off" id="filter" class="filter-form__input js-filter-input" name="filter" type="text" autofocus="true">
-            <div class="filter-form__filter-icon-black">Filter</div>
-            <div class="filter-form__reset-wrapper">
+            <div class="filter-form__filter-icon-white filter-form__filter-icon js-filter-trigger">Filter</div>
+            <div class="filter-form__reset-wrapper js-filter-reset">
               <button type="reset" class="filter-form__reset-icon-white">Reset</button>
             </div>
           </div>

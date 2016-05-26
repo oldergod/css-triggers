@@ -778,7 +778,6 @@ body {
   }
 }
 
-// TODO(benoit) tmp fix to make it clikable
 .app-main__filter-container {
   margin-top: 50px;
 }
@@ -805,9 +804,10 @@ body {
 
 .app-header__filter-wrapper {
   position: absolute;
-  width: 100%;
   top: 0;
   z-index: 1000;
+  width: 56px;
+  right: 0;
 }
 
 .app-header__filter-form-wrapper {
@@ -821,32 +821,42 @@ body {
 }
 
 .filter-form__filter-box {
-  background: #fff;
   position: relative;
+  border-radius: 2px;
 }
 
 .filter-form__input {
   background: 0;
   border: 0;
   margin: 0;
-  padding: 8px 8px 8px 72px;
-  width: calc(100% - 80px);
+  padding: 8px;
+  width: calc(100% - 16px);
   height: 20px;
   font-family: 'Roboto', Helvetica, sans-serif;
   font-weight: 500;
   font-size: 15px;
+  opacity: 0;
 }
 
-.filter-form__filter-icon-black {
-  left: 24px;
+.filter-form__filter-icon {
+  left: 0;
   position: absolute;
   top: 6px;
-  background: url('/third_party/MaterialIcons/ic_search_black_24px.svg') center center no-repeat;
+  background: center center no-repeat;
   text-indent: -30000px;
   border: none;
   outline: 0;
   width: 24px;
   height: 24px;
+  cursor: pointer;
+}
+
+.filter-form__filter-icon-black {
+  background-image: url('/third_party/MaterialIcons/ic_search_black_24px.svg');
+}
+
+.filter-form__filter-icon-white {
+  background-image: url('/third_party/MaterialIcons/ic_search_white_24px.svg');
 }
 
 .filter-form__reset-wrapper {
@@ -857,6 +867,8 @@ body {
   height: 22px;
   background: #607d8b;
   border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .filter-form__reset-icon-white {
@@ -868,6 +880,35 @@ body {
   top: 2px;
   left: 2px;
   position: absolute;
+}
+
+.app-header__filter-wrapper--open {
+  width: 100%;
+  max-width: 600px;
+
+  .filter-form__filter-box {
+    background-color: #fff;
+  }
+
+  .filter-form__reset-wrapper {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .filter-form__input {
+    padding: 8px 8px 8px 72px;
+    width: calc(100% - 80px);
+    opacity: 1;
+  }
+
+  .filter-form__filter-icon {
+    left: 24px;
+    cursor: auto;
+  }
+
+  .filter-form__reset-wrapper {
+    opacity: 1;
+  }
 }
 
 @font-face {

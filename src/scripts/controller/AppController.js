@@ -52,6 +52,9 @@ export default class AppController {
         this.details.querySelector('.js-details-breakdown');
 
     this.properties = Array.from(document.querySelectorAll('.js-property'));
+    this.filterWrapper = document.querySelector('.js-filter-wrapper');
+    this.filterTrigger = document.querySelector('.js-filter-trigger');
+    this.filterReset = document.querySelector('.js-filter-reset');
     this.filterForm = document.querySelector('.js-filter-form');
     this.filterInput = document.querySelector('.js-filter-input');
     this.noResultsMessage = document.querySelector('.js-no-results-message');
@@ -59,6 +62,8 @@ export default class AppController {
 
     this.showDetails = this.showDetails.bind(this);
     this.hideDetails = this.hideDetails.bind(this);
+    this.openFilter = this.openFilter.bind(this);
+    this.closeFilter = this.closeFilter.bind(this);
     this.filterOnChange = this.filterOnChange.bind(this);
     this.filterOnSubmit = this.filterOnSubmit.bind(this);
     this.scrollTop = 0;
@@ -369,6 +374,44 @@ export default class AppController {
     });
   }
 
+  openFilter (evt) {
+    const timingFunctionExpand = function (t) {
+      return --t * t * t * t * t + 1;
+    };
+
+    const primaryDuration = 200;
+    const secondaryDuraction = 150;
+
+    const flip = FLIP.group([{
+      element: this.filterWrapper,
+      easing: timingFunctionExpand,
+      duration: primaryDuration,
+    }, {
+      element: this.filterReset,
+      easing: timingFunctionExpand,
+      duration: secondaryDuraction,
+      delay: primaryDuration * .9,
+      transform: false,
+    }]);
+    flip.first();
+
+    this.filterWrapper.classList.add('app-header__filter-wrapper--open');
+    this.filterTrigger.classList.remove('filter-form__filter-icon-white');
+    this.filterTrigger.classList.add('filter-form__filter-icon-black');
+
+    flip.last();
+    flip.invert();
+    flip.play();
+    this.filterInput.focus();
+  }
+
+  closeFilter (evt) {
+    this.filterWrapper.classList.remove('app-header__filter-wrapper--open');
+    this.filterTrigger.classList.add('filter-form__filter-icon-white');
+    this.filterTrigger.classList.remove('filter-form__filter-icon-black');
+    this.filterInput.blur();
+  }
+
   // TODO(benoit) how about we open the property found if only one?
   // if so, should we reset the filter and open it? or leave the filter as is?
   filterOnSubmit (evt) {
@@ -386,6 +429,7 @@ export default class AppController {
       this.properties.forEach((property) => {
         property.classList.remove('app-main__property--hidden');
       });
+      this.closeFilter();
     } else {
       this.properties.forEach((property) => {
         if (property.dataset['property'].includes(filterValue)) {
@@ -455,6 +499,7 @@ export default class AppController {
       this.detailsCloseButton.focus();
     });
 
+    this.filterTrigger.addEventListener('click', this.openFilter);
     this.filterForm.addEventListener('input', this.filterOnChange);
     this.filterForm.addEventListener('reset', this.filterOnChange);
     this.filterForm.addEventListener('submit', this.filterOnSubmit);
