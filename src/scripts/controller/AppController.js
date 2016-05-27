@@ -76,12 +76,6 @@ export default class AppController {
 
     this.selectedProperty = data;
 
-    // From Tween.js (MIT license)
-    // @see https://github.com/tweenjs/tween.js/blob/master/src/Tween.js
-    const timingFunctionExpand = function (t) {
-      return --t * t * t * t * t + 1;
-    };
-
     // Reads go first.
     const target = document
         .querySelector(`.js-property[data-property="${data}"]`);
@@ -137,18 +131,18 @@ export default class AppController {
     // Create a FLIP group for animating the background and elements.
     const flip = FLIP.group([{
       element: this.detailsBackground,
-      easing: timingFunctionExpand,
+      easing: AppController.timingFunctionExpand,
       duration: 450,
       opacity: false
     }, {
       element: this.detailsContent,
-      easing: timingFunctionExpand,
+      easing: AppController.timingFunctionExpand,
       duration: 550,
       delay: 200,
       transform: false
     }, {
       element: this.detailsMasthead,
-      easing: timingFunctionExpand,
+      easing: AppController.timingFunctionExpand,
       duration: 450,
       opacity: false
     }]);
@@ -375,40 +369,36 @@ export default class AppController {
   }
 
   openFilter (evt) {
-    const timingFunctionExpand = function (t) {
-      return --t * t * t * t * t + 1;
-    };
 
     const primaryDuration = 200;
     const secondaryDuraction = 150;
 
     const flip = FLIP.group([{
       element: this.filterWrapper,
-      easing: timingFunctionExpand,
+      easing: AppController.timingFunctionExpand,
       duration: primaryDuration,
     }, {
       element: this.filterReset,
-      easing: timingFunctionExpand,
+      easing: AppController.timingFunctionExpand,
       duration: secondaryDuraction,
       delay: primaryDuration * .9,
       transform: false,
     }]);
     flip.first();
-
     this.filterWrapper.classList.add('app-header__filter-wrapper--open');
-    this.filterTrigger.classList.remove('filter-form__filter-icon-white');
-    this.filterTrigger.classList.add('filter-form__filter-icon-black');
-
+    this.filterTrigger.tabIndex = -1;
     flip.last();
     flip.invert();
     flip.play();
     this.filterInput.focus();
+
+    evt.preventDefault();
   }
 
   closeFilter (evt) {
+
     this.filterWrapper.classList.remove('app-header__filter-wrapper--open');
-    this.filterTrigger.classList.add('filter-form__filter-icon-white');
-    this.filterTrigger.classList.remove('filter-form__filter-icon-black');
+    this.filterTrigger.tabIndex = 0;
     this.filterInput.blur();
   }
 
@@ -503,5 +493,23 @@ export default class AppController {
     this.filterForm.addEventListener('input', this.filterOnChange);
     this.filterForm.addEventListener('reset', this.filterOnChange);
     this.filterForm.addEventListener('submit', this.filterOnSubmit);
+    this.filterInput.addEventListener('keydown', (evt) => {
+      evt = evt || window.event;
+      let isEscape = false;
+      if ('key' in evt) {
+          isEscape = evt.key == 'Escape';
+      } else {
+          isEscape = evt.keyCode == 27;
+      }
+      if (isEscape) {
+          this.filterForm.reset();
+      }
+    })
+  }
+
+  // From Tween.js (MIT license)
+  // @see https://github.com/tweenjs/tween.js/blob/master/src/Tween.js
+  static timingFunctionExpand (t) {
+    return --t * t * t * t * t + 1;
   }
 }

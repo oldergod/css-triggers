@@ -845,41 +845,37 @@ body {
   background: center center no-repeat;
   text-indent: -30000px;
   border: none;
-  outline: 0;
   width: 24px;
   height: 24px;
   cursor: pointer;
+  will-change: opacity;
 }
 
 .filter-form__filter-icon-black {
   background-image: url('/third_party/MaterialIcons/ic_search_black_24px.svg');
+  opacity: 0;
+  transition: opacity 150ms cubic-bezier(0,0,0.21,1) 180ms;
 }
 
 .filter-form__filter-icon-white {
   background-image: url('/third_party/MaterialIcons/ic_search_white_24px.svg');
-}
-
-.filter-form__reset-wrapper {
-  right: 7px;
-  position: absolute;
-  top: 7px;
-  width: 22px;
-  height: 22px;
-  background: #607d8b;
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
+  z-index: 1000;
 }
 
 .filter-form__reset-icon-white {
-  background: url('/third_party/MaterialIcons/ic_close_white_18px.svg') center center no-repeat;
+  position: absolute;
+  background: url('/third_party/MaterialIcons/ic_close_white_18px.svg') center center no-repeat #607d8b;
   text-indent: -30000px;
   border: none;
-  width: 18px;
-  height: 18px;
-  top: 2px;
-  left: 2px;
-  position: absolute;
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  top: 7px;
+  right: 7px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 500;
 }
 
 .app-header__filter-wrapper--open {
@@ -888,9 +884,10 @@ body {
 
   .filter-form__filter-box {
     background-color: #fff;
+    box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
   }
 
-  .filter-form__reset-wrapper {
+  .filter-form__reset-icon-white {
     opacity: 1;
     pointer-events: auto;
   }
@@ -906,8 +903,12 @@ body {
     cursor: auto;
   }
 
-  .filter-form__reset-wrapper {
+  .filter-form__filter-icon-black {
     opacity: 1;
+  }
+
+  .filter-form__filter-icon-white {
+    opacity: 0;
   }
 }
 
