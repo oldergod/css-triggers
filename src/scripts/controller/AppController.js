@@ -19,6 +19,20 @@ import messages from '../messages/Messages';
 import routerInstance from '../libs/Router';
 import FLIP from '../libs/FLIP';
 
+// From Tween.js (MIT license)
+// @see https://github.com/tweenjs/tween.js/blob/master/src/Tween.js
+const timingFunctionExpand = function (t) {
+  return --t * t * t * t * t + 1;
+}
+
+const timingFunctionCollapse = function (t) {
+  return --t * t * t * t * t + 1;
+};
+
+const isEscapeKey = function (evt) {
+  return 'key' in evt && evt.key === 'Escape' || evt.keyCode === 27;
+};
+
 export default class AppController {
 
   constructor () {
@@ -53,7 +67,7 @@ export default class AppController {
 
     this.properties = Array.from(document.querySelectorAll('.js-property'));
     this.filterWrapper = document.querySelector('.js-filter-wrapper');
-    this.filterTrigger = document.querySelector('.js-filter-trigger');
+    this.filterToggle = document.querySelector('.js-filter-toggle');
     this.filterReset = document.querySelector('.js-filter-reset');
     this.filterForm = document.querySelector('.js-filter-form');
     this.filterInput = document.querySelector('.js-filter-input');
@@ -131,18 +145,18 @@ export default class AppController {
     // Create a FLIP group for animating the background and elements.
     const flip = FLIP.group([{
       element: this.detailsBackground,
-      easing: AppController.timingFunctionExpand,
+      easing: timingFunctionExpand,
       duration: 450,
       opacity: false
     }, {
       element: this.detailsContent,
-      easing: AppController.timingFunctionExpand,
+      easing: timingFunctionExpand,
       duration: 550,
       delay: 200,
       transform: false
     }, {
       element: this.detailsMasthead,
-      easing: AppController.timingFunctionExpand,
+      easing: timingFunctionExpand,
       duration: 450,
       opacity: false
     }]);
@@ -193,12 +207,6 @@ export default class AppController {
   }
 
   hideDetails (data) {
-
-    // From Tween.js (MIT license)
-    // @see https://github.com/tweenjs/tween.js/blob/master/src/Tween.js
-    const timingFunctionCollapse = function (t) {
-      return --t * t * t * t * t + 1;
-    };
 
     const selector = `.js-property[data-property="${this.selectedProperty}"]`;
     const target = document.querySelector(selector);
@@ -369,44 +377,49 @@ export default class AppController {
   }
 
   openFilter (evt) {
-
     const primaryDuration = 200;
     const secondaryDuraction = 150;
 
     const flip = FLIP.group([{
       element: this.filterWrapper,
-      easing: AppController.timingFunctionExpand,
+      easing: timingFunctionExpand,
       duration: primaryDuration,
     }, {
       element: this.filterReset,
-      easing: AppController.timingFunctionExpand,
+      easing: timingFunctionExpand,
       duration: secondaryDuraction,
       delay: primaryDuration * .9,
       transform: false,
     }]);
     flip.first();
     this.filterWrapper.classList.add('app-header__filter-wrapper--open');
-    this.filterTrigger.tabIndex = -1;
     flip.last();
     flip.invert();
     flip.play();
+
+    this.filterToggle.tabIndex = -1;
     this.filterInput.focus();
 
     evt.preventDefault();
   }
 
   closeFilter (evt) {
-
     this.filterWrapper.classList.remove('app-header__filter-wrapper--open');
-    this.filterTrigger.tabIndex = 0;
+    this.filterToggle.tabIndex = 0;
     this.filterInput.blur();
   }
 
-  // TODO(benoit) how about we open the property found if only one?
-  // if so, should we reset the filter and open it? or leave the filter as is?
   filterOnSubmit (evt) {
     evt.preventDefault();
     this.filterInput.blur();
+
+    // open property if only one left
+    const visibleDeeplinkSelector =
+      '.js-property:not(.app-main__property--hidden) > .js-deeplink';
+    const visibleDeeplinks =
+      document.querySelectorAll(visibleDeeplinkSelector);
+    if (visibleDeeplinks.length === 1)
+      visibleDeeplinks[0].click();
   }
 
   filterOnChange (evt) {
@@ -464,13 +477,10 @@ export default class AppController {
     });
 
     window.addEventListener('keyup', (e) => {
-
       // Escape key only.
-      if (e.keyCode !== 27) {
-        return;
+      if (isEscapeKey(e)) {
+        routerInstance().then(router => router.go('/'));
       }
-
-      routerInstance().then(router => router.go('/'));
     });
 
     this.detailsCloseButton.addEventListener('click', (e) => {
@@ -489,27 +499,14 @@ export default class AppController {
       this.detailsCloseButton.focus();
     });
 
-    this.filterTrigger.addEventListener('click', this.openFilter);
+    this.filterToggle.addEventListener('click', this.openFilter);
     this.filterForm.addEventListener('input', this.filterOnChange);
     this.filterForm.addEventListener('reset', this.filterOnChange);
     this.filterForm.addEventListener('submit', this.filterOnSubmit);
     this.filterInput.addEventListener('keydown', (evt) => {
-      evt = evt || window.event;
-      let isEscape = false;
-      if ('key' in evt) {
-          isEscape = evt.key == 'Escape';
-      } else {
-          isEscape = evt.keyCode == 27;
+      if (isEscapeKey(evt)) {
+        this.filterForm.reset();
       }
-      if (isEscape) {
-          this.filterForm.reset();
-      }
-    })
-  }
-
-  // From Tween.js (MIT license)
-  // @see https://github.com/tweenjs/tween.js/blob/master/src/Tween.js
-  static timingFunctionExpand (t) {
-    return --t * t * t * t * t + 1;
+    });
   }
 }
