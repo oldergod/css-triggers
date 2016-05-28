@@ -376,22 +376,22 @@ export default class AppController {
   }
 
   openFilter (evt) {
-    const primaryDuration = 200;
-    const secondaryDuraction = 150;
-
     const flip = FLIP.group([{
       element: this.filterWrapper,
       easing: timingFunctionExpand,
-      duration: primaryDuration,
+      duration: 200,
     }, {
       element: this.filterReset,
       easing: timingFunctionExpand,
-      duration: secondaryDuraction,
-      delay: primaryDuration * .9,
+      duration: 150,
+      delay: 180,
       transform: false,
     }]);
     flip.first();
     this.filterWrapper.classList.add('app-header__filter-wrapper--open');
+    this.filterToggle.setAttribute('aria-hidden', 'true');
+    this.filterInput.removeAttribute('aria-hidden');
+    this.filterReset.removeAttribute('aria-hidden');
     flip.last();
     flip.invert();
     flip.play();
@@ -404,6 +404,9 @@ export default class AppController {
 
   closeFilter (evt) {
     this.filterWrapper.classList.remove('app-header__filter-wrapper--open');
+    this.filterToggle.removeAttribute('aria-hidden');
+    this.filterInput.setAttribute('aria-hidden', 'true');
+    this.filterReset.setAttribute('aria-hidden', 'true');
     this.filterToggle.tabIndex = 0;
     this.filterInput.blur();
   }
@@ -424,22 +427,23 @@ export default class AppController {
   filterOnChange (evt) {
     let visibleCount = 0;
     let filterValue = this.filterInput.value.replace(/[^a-z\-]*/ig, '');
-    let property;
 
     if (evt.type === 'reset') {
       filterValue = '';
-      this.appListItems.forEach((property) => {
-        property.classList.remove('app-main__property--hidden');
+      this.appListItems.forEach((appListItem) => {
+        appListItem.classList.remove('app-main__property--hidden');
+        appListItem.removeAttribute('aria-hidden');
       });
       this.closeFilter();
     } else {
-      this.appListItems.forEach((property) => {
-        if (property.dataset['property'].includes(filterValue)) {
-          // TODO(benoit) to animate or not to animate?
-          property.classList.remove('app-main__property--hidden');
+      this.appListItems.forEach((appListItem) => {
+        if (appListItem.dataset['property'].includes(filterValue)) {
+          appListItem.classList.remove('app-main__property--hidden');
+          appListItem.removeAttribute('aria-hidden');
           visibleCount++;
         } else {
-          property.classList.add('app-main__property--hidden');
+          appListItem.classList.add('app-main__property--hidden');
+          appListItem.setAttribute('aria-hidden', 'true');
         }
       });
     }
