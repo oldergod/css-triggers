@@ -42,7 +42,7 @@ export default class AppController {
 
     this.appContainer = document.querySelector('.app-container');
     this.appLinks = document.querySelectorAll('.js-deeplink');
-    this.appListItems = document.querySelectorAll('.js-property');
+    this.appListItems = Array.from(document.querySelectorAll('.js-property'));
     this.appEngineLegend = document.querySelector('.js-legend');
     this.appEngineLabels = document.querySelector('.js-labels');
     this.appStateLabels = document.querySelector('.js-state-labels');
@@ -65,7 +65,6 @@ export default class AppController {
     this.detailsBreakdown =
         this.details.querySelector('.js-details-breakdown');
 
-    this.properties = Array.from(document.querySelectorAll('.js-property'));
     this.filterWrapper = document.querySelector('.js-filter-wrapper');
     this.filterToggle = document.querySelector('.js-filter-toggle');
     this.filterReset = document.querySelector('.js-filter-reset');
@@ -429,12 +428,12 @@ export default class AppController {
 
     if (evt.type === 'reset') {
       filterValue = '';
-      this.properties.forEach((property) => {
+      this.appListItems.forEach((property) => {
         property.classList.remove('app-main__property--hidden');
       });
       this.closeFilter();
     } else {
-      this.properties.forEach((property) => {
+      this.appListItems.forEach((property) => {
         if (property.dataset['property'].includes(filterValue)) {
           // TODO(benoit) to animate or not to animate?
           property.classList.remove('app-main__property--hidden');
