@@ -450,9 +450,11 @@ export default class AppController {
 
     if (visibleCount === 0) {
       this.noResultsMessage.classList.add('app-main__no-results-message--visible');
+      this.noResultsMessage.removeAttribute('aria-hidden');
       this.filterText.textContent = filterValue;
     } else {
       this.noResultsMessage.classList.remove('app-main__no-results-message--visible');
+      this.noResultsMessage.setAttribute('aria-hidden', 'true');
     }
   }
 
