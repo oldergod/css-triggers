@@ -48,20 +48,15 @@ Paul & Surma
 <body>
   <!-- @VERSION@ -->
   <header class="js-header app-header">
-    <h1 class="app-header__title">CSS Triggers</h1>
+    <h1 class="app-header__title js-header-title">CSS Triggers</h1>
 
-    <div class="app-header__filter-wrapper js-filter-wrapper">
-      <div class="app-header__filter-form-wrapper">
-        <form class="filter-form js-filter-form" autocomplete="off">
-          <div class="filter-form__filter-box">
-            <input aria-hidden="true" placeholder="filter" autocorrect="off" autocapitalize="off" id="filter" class="filter-form__input js-filter-input" name="filter" type="text" autofocus="true" />
-            <div class="filter-form__filter-icon-black filter-form__filter-icon">Filter</div>
-            <button type="button" tabindex="0" class="filter-form__filter-icon-white filter-form__filter-icon js-filter-toggle">Filter</button>
-            <button aria-hidden="true" type="reset" class="filter-form__reset-icon-white js-filter-reset">Reset</button>
-          </div>
-        </form>
+    <form class="filter-form js-filter-form" autocomplete="off">
+      <div class="filter-form__filter-widget js-filter-widget">
+        <button type="button" tabindex="0" class="filter-form__input-icon js-filter-toggle">Filter</button>
+        <input aria-hidden="true" placeholder="filter" autocorrect="off" autocapitalize="off" class="filter-form__input js-filter-input" name="filter" type="text" autofocus="true" />
+        <button aria-hidden="true" type="reset" class="filter-form__reset-icon js-filter-reset">Reset</button>
       </div>
-    </div>
+    </form>
 
     <div class="app-header__labels-container" aria-hidden="true">
 

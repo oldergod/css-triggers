@@ -26,7 +26,11 @@ const timingFunctionExpand = function (t) {
 }
 
 const timingFunctionCollapse = function (t) {
-  return --t * t * t * t * t + 1;
+  if ((t *= 2) < 1) {
+    return 0.5 * t * t * t * t * t;
+  }
+
+  return 0.5 * ((t -= 2) * t * t * t * t + 2);
 };
 
 const isEscapeKey = function (evt) {
@@ -47,6 +51,7 @@ export default class AppController {
     this.appEngineLabels = document.querySelector('.js-labels');
     this.appStateLabels = document.querySelector('.js-state-labels');
     this.appHeader = document.querySelector('.js-header');
+    this.appHeaderTitle = document.querySelector('.js-header-title');
 
     this.details = document.querySelector('.js-details');
     this.detailsCloseButton = this.details.querySelector('.js-details-close');
@@ -65,7 +70,7 @@ export default class AppController {
     this.detailsBreakdown =
         this.details.querySelector('.js-details-breakdown');
 
-    this.filterWrapper = document.querySelector('.js-filter-wrapper');
+    this.filterWidget = document.querySelector('.js-filter-widget');
     this.filterToggle = document.querySelector('.js-filter-toggle');
     this.filterReset = document.querySelector('.js-filter-reset');
     this.filterForm = document.querySelector('.js-filter-form');
@@ -375,20 +380,39 @@ export default class AppController {
     });
   }
 
-  openFilter (evt) {
-    const flip = FLIP.group([{
-      element: this.filterWrapper,
+  generateFilterFlipGroup (flipDuration) {
+    return [{
+      element: this.filterInput,
       easing: timingFunctionExpand,
-      duration: 200,
+      opacity: false,
+    }, {
+      element: this.filterToggle,
+      easing: timingFunctionExpand,
+      duration: flipDuration,
+      opacity: false,
     }, {
       element: this.filterReset,
       easing: timingFunctionExpand,
-      duration: 150,
-      delay: 180,
+      duration: flipDuration,
       transform: false,
-    }]);
+    }, {
+      element: this.appHeaderTitle,
+      easing: timingFunctionExpand,
+      duration: flipDuration,
+      transform: false,
+    }];
+  }
+
+  openFilter (evt) {
+    if (this.appHeader.classList.contains('app-header__filter--open')) {
+      this.filterInput.focus();
+      evt.preventDefault();
+      return;
+    }
+
+    const flip = FLIP.group(this.generateFilterFlipGroup(333));
     flip.first();
-    this.filterWrapper.classList.add('app-header__filter-wrapper--open');
+    this.appHeader.classList.add('app-header__filter--open');
     this.filterToggle.setAttribute('aria-hidden', 'true');
     this.filterInput.removeAttribute('aria-hidden');
     this.filterReset.removeAttribute('aria-hidden');
@@ -403,10 +427,17 @@ export default class AppController {
   }
 
   closeFilter (evt) {
-    this.filterWrapper.classList.remove('app-header__filter-wrapper--open');
+    const flip = FLIP.group(this.generateFilterFlipGroup(200));
+    flip.first();
+
+    this.appHeader.classList.remove('app-header__filter--open');
     this.filterToggle.removeAttribute('aria-hidden');
     this.filterInput.setAttribute('aria-hidden', 'true');
     this.filterReset.setAttribute('aria-hidden', 'true');
+    flip.last();
+    flip.invert();
+    flip.play();
+
     this.filterToggle.tabIndex = 0;
     this.filterInput.blur();
   }
