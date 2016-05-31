@@ -84,6 +84,8 @@ export default class AppController {
     this.closeFilter = this.closeFilter.bind(this);
     this.filterOnChange = this.filterOnChange.bind(this);
     this.filterOnSubmit = this.filterOnSubmit.bind(this);
+    this.filterOnFocus = this.filterOnFocus.bind(this);
+    this.filterOnBlur = this.filterOnBlur.bind(this);
     this.scrollTop = 0;
 
     this.addEventListeners();
@@ -442,6 +444,14 @@ export default class AppController {
     this.filterInput.blur();
   }
 
+  filterOnFocus (evt) {
+    this.filterWidget.classList.add('focused');
+  }
+
+  filterOnBlur (evt) {
+    this.filterWidget.classList.remove('focused');
+  }
+
   filterOnSubmit (evt) {
     evt.preventDefault();
     this.filterInput.blur();
@@ -539,6 +549,8 @@ export default class AppController {
     this.filterForm.addEventListener('input', this.filterOnChange);
     this.filterForm.addEventListener('reset', this.filterOnChange);
     this.filterForm.addEventListener('submit', this.filterOnSubmit);
+    this.filterInput.addEventListener('focus', this.filterOnFocus);
+    this.filterInput.addEventListener('blur', this.filterOnBlur);
     this.filterInput.addEventListener('keydown', (evt) => {
       if (isEscapeKey(evt)) {
         this.filterForm.reset();
