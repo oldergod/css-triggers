@@ -412,43 +412,56 @@ export default class AppController {
       return;
     }
 
+    this.filterToggle.blur();
+
     const flip = FLIP.group(this.generateFilterFlipGroup(333));
     flip.first();
     this.appHeader.classList.add('app-header__filter--open');
-    this.filterToggle.setAttribute('aria-hidden', 'true');
-    this.filterInput.removeAttribute('aria-hidden');
-    this.filterReset.removeAttribute('aria-hidden');
     flip.last();
     flip.invert();
     flip.play();
 
-    this.filterToggle.tabIndex = -1;
-    this.filterInput.focus();
+    const onFlipComplete = () => {
+      this.filterInput.removeEventListener('flipComplete', onFlipComplete);
+
+      this.filterToggle.setAttribute('aria-hidden', 'true');
+      this.filterInput.removeAttribute('aria-hidden');
+      this.filterReset.removeAttribute('aria-hidden');
+      this.filterToggle.tabIndex = -1;
+      this.filterInput.focus();
+    };
+
+    this.filterInput.addEventListener('flipComplete', onFlipComplete);
 
     evt.preventDefault();
   }
 
-  closeFilter (evt) {
+  closeFilter () {
     const flip = FLIP.group(this.generateFilterFlipGroup(200));
     flip.first();
-
     this.appHeader.classList.remove('app-header__filter--open');
-    this.filterToggle.removeAttribute('aria-hidden');
-    this.filterInput.setAttribute('aria-hidden', 'true');
-    this.filterReset.setAttribute('aria-hidden', 'true');
     flip.last();
     flip.invert();
     flip.play();
 
-    this.filterToggle.tabIndex = 0;
-    this.filterInput.blur();
+    const onFlipComplete = () => {
+      this.filterInput.removeEventListener('flipComplete', onFlipComplete);
+
+      this.filterToggle.removeAttribute('aria-hidden');
+      this.filterInput.setAttribute('aria-hidden', 'true');
+      this.filterReset.setAttribute('aria-hidden', 'true');
+      this.filterToggle.tabIndex = 0;
+      this.filterInput.blur();
+    };
+
+    this.filterInput.addEventListener('flipComplete', onFlipComplete);
   }
 
-  filterOnFocus (evt) {
+  filterOnFocus () {
     this.filterWidget.classList.add('focused');
   }
 
-  filterOnBlur (evt) {
+  filterOnBlur () {
     this.filterWidget.classList.remove('focused');
   }
 
